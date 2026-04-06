@@ -27,10 +27,11 @@ public class Level {
                 "1....................11.1",
                 "1.................11....1",
                 "1.............1111......1",
-                "1.......11111...........1",
+                "1.......1111............1",
                 "1.222.111...............1",
                 "1111111111111111111111111",
         };
+
         grille = new int[mapData.length][mapData[0].length()];
         for (int y = 0; y < mapData.length; y++) {
             for (int x = 0; x < mapData[y].length(); x++) {
@@ -40,7 +41,6 @@ public class Level {
                 if (mapData[y].charAt(x) == '2') {
                     grille[y][x] = 2;
                 }
-
             }
         }
     }

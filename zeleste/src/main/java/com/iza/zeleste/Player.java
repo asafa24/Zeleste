@@ -15,14 +15,19 @@ public class Player {
     public double dashTimer = 0;
     public boolean canDash = true;
 
+    private Color color;
+
 
     public Player(double x, double y){
         this.pos = new Vector2D(x, y);
         this.vel = new Vector2D(0, 0);
+        this.color = Color.LIGHTSALMON;
     }
 
     public void render(GraphicsContext gc){
-        gc.setFill(Color.RED);
+        if(!canDash) this.color = Color.LIGHTBLUE;
+        else this.color = Color.LIGHTSALMON;
+        gc.setFill(this.color);
         gc.fillRect(this.pos.x, this.pos.y, WITDH, HEIGHT);
     }
 

@@ -80,20 +80,32 @@ public class Main extends Application {
         double velX = zadeline.getVel().x;
         double velY = zadeline.getVel().y;
 
-        double dashSpeed = 700;
-        double dashDuration = 0.15;
+        double dashSpeed = 600;
+        double dashDuration = 0.10;
 
         if ((keys.contains(KeyCode.SHIFT) || keys.contains(KeyCode.J)) && zadeline.canDash) {
             zadeline.isDashing = true;
             zadeline.canDash = false;
             zadeline.dashTimer = dashDuration;
-            velX = (keys.contains(KeyCode.LEFT) || keys.contains(KeyCode.Q)) ? -dashSpeed : dashSpeed;
-            velY = 0;
+
+            double dirX = 0;
+            double dirY = 0;
+
+            if(keys.contains(KeyCode.RIGHT) || keys.contains(KeyCode.D)) dirX = 1;
+            if(keys.contains(KeyCode.LEFT) || keys.contains(KeyCode.Q)) dirX = -1;
+            if(keys.contains(KeyCode.UP) || keys.contains(KeyCode.Z)) dirY = -1;
+            if(keys.contains(KeyCode.DOWN) || keys.contains(KeyCode.S)) dirY = 1;
+
+            if (dirX == 0 && dirY == 0) dirX = (velX>= 0) ? 1 : -1;
+
+            double length = Math.sqrt(dirX * dirX + dirY * dirY);
+            velX = (dirX/length) * dashSpeed;
+            velY = (dirY/length) * dashSpeed;
         }
 
         if (zadeline.isDashing) {
             zadeline.dashTimer -= dt;
-            velY = 0;
+            //velY = 0;
 
             if (zadeline.dashTimer <= 0) {
                 zadeline.isDashing = false;
