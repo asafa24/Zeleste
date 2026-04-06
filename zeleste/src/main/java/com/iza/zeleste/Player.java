@@ -7,15 +7,22 @@ import javafx.scene.paint.Color;
 public class Player {
     private Vector2D pos;
     private Vector2D vel;
-    private static final double WITDH = 16;
+
+    private static final double WIDTH = 16;
     private static final double HEIGHT = 16;
-    public boolean onGround = false;
+    private Color color;
 
     public boolean isDashing = false;
     public double dashTimer = 0;
     public boolean canDash = true;
 
-    private Color color;
+    public boolean onGround = false;
+    public boolean touchingwallLeft = false;
+    public boolean touchingwallRight = false;
+
+
+
+
 
 
     public Player(double x, double y){
@@ -28,7 +35,7 @@ public class Player {
         if(!canDash) this.color = Color.LIGHTBLUE;
         else this.color = Color.LIGHTSALMON;
         gc.setFill(this.color);
-        gc.fillRect(this.pos.x, this.pos.y, WITDH, HEIGHT);
+        gc.fillRect(this.pos.x, this.pos.y, WIDTH, HEIGHT);
     }
 
     public void move(double t){
@@ -78,8 +85,8 @@ public class Player {
         return vel;
     }
 
-    public static double getWITDH() {
-        return WITDH;
+    public static double getWIDTH() {
+        return WIDTH;
     }
     public static double getHEIGHT() {
         return HEIGHT;

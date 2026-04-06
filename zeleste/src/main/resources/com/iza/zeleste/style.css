@@ -1,0 +1,23 @@
+@font-face {
+    src: url("fonts/Renogare-Regular.otf");
+}
+
+.titre-zeleste {
+    -fx-font-family: "Renogare";
+    -fx-font-size: 80px;
+    -fx-text-fill: #ab2078;
+}
+
+.button-zeleste {
+    -fx-font-family: "Renogare";
+    -fx-font-size: 20px;
+    -fx-background-color: #ab2078;
+    -fx-text-fill: white;
+}
+
+.button{
+    -fx-font-family: "Renogare";
+    -fx-font-size: 20px;
+    -fx-background-color: #ab2078;
+    -fx-text-fill: white;
+}

@@ -7,10 +7,10 @@ public class Level {
     public static final int TILE_SIZE = 32;
 
     private int[][] grille;
-
+    private String[][] allRooms;
 
     public Level() {
-        String[] mapData = {
+        this.allRooms = new String[][]{{
                 "1111111111111111111111111",
                 "1.......................1",
                 "1.......1111............1",
@@ -28,13 +28,40 @@ public class Level {
                 "1.................11....1",
                 "1.............1111......1",
                 "1.......1111............1",
-                "1.222.111...............1",
+                "1.222.111...............0",
                 "1111111111111111111111111",
-        };
+        }, {
+                "1111111111111111111111111",
+                "1.......................1",
+                "1.......1111............1",
+                "1.......................1",
+                "1..121..................1",
+                "1...1......11...........1",
+                "1......1112.............1",
+                "1211......1.............1",
+                "111...111...............1",
+                "1.........1111..........1",
+                "1..............1........1",
+                "1.............1111......1",
+                "1................11.....1",
+                "1....................11.1",
+                "1.................11....1",
+                "1.............1111......1",
+                "1........1.1............1",
+                "0.....111...............1",
+                "1111111111111111111111111",
+        }};
+        loadRoom(0);
+    }
 
+    public void loadRoom(int id){
+        String[] mapData = allRooms[id];
         grille = new int[mapData.length][mapData[0].length()];
         for (int y = 0; y < mapData.length; y++) {
             for (int x = 0; x < mapData[y].length(); x++) {
+                if(mapData[y].charAt(x) == '0'){
+                    grille[y][x] = 0;
+                }
                 if (mapData[y].charAt(x) == '1') {
                     grille[y][x] = 1;
                 }
@@ -43,21 +70,29 @@ public class Level {
                 }
             }
         }
+
     }
 
-    public void draw(GraphicsContext gc) {
-        for (int y = 0; y < grille.length; y++) {
-            for (int x = 0; x < grille[y].length; x++) {
-                if (grille[y][x] == 1) {
-                    gc.setFill(Color.GRAY);
-                    gc.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    public void draw(GraphicsContext gc, int roomId, double offsetX) {
+        // On récupère les données de la salle demandée (pas forcément la grille actuelle)
+        String[] mapData = allRooms[roomId];
+
+        for (int y = 0; y < mapData.length; y++) {
+            for (int x = 0; x < mapData[y].length(); x++) {
+
+                double drawX = (x * TILE_SIZE) + offsetX;
+                double drawY = y * TILE_SIZE;
+
+                char tile = mapData[y].charAt(x);
+
+                if (tile == '1') {
+                    gc.setFill(Color.LIGHTSLATEGRAY);
+                    gc.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
                 }
-                else if (grille[y][x] == 2) {
+                else if (tile == '2') {
                     gc.setFill(Color.RED);
-                    double xPos = x * TILE_SIZE;
-                    double yPos = y * TILE_SIZE;
-                    gc.fillPolygon(new double[]{xPos, xPos + TILE_SIZE/2, xPos + TILE_SIZE},
-                            new double[]{yPos + TILE_SIZE, yPos, yPos + TILE_SIZE}, 3);
+                    gc.fillPolygon(new double[]{drawX, drawX + TILE_SIZE/2, drawX + TILE_SIZE},
+                            new double[]{drawY + TILE_SIZE, drawY, drawY + TILE_SIZE}, 3);
                 }
             }
         }
