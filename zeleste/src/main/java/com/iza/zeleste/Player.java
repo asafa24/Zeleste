@@ -44,8 +44,8 @@ public class Player {
     }
 
     public void die(){
-        pos.x = Main.WIDTH/2;
-        pos.y = Main.HEIGHT/2;
+        pos.x = 36;
+        pos.y = Main.HEIGHT-33;
         vel.x = 0;
         vel.y = 0;
         canDash = true;

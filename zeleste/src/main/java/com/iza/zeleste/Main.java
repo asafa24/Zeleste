@@ -14,7 +14,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class Main extends Application {
 
@@ -30,6 +32,7 @@ public class Main extends Application {
     private HashSet<KeyCode> keys;
     private Player zadeline;
     private Level level;
+    public static List<Collectible> collectibles;
 
     public static final double WIDTH = 800;
     public static final double HEIGHT = 600;
@@ -37,6 +40,7 @@ public class Main extends Application {
     private boolean spacePressedLastFrame = false;
 
     private int currentRoom;
+
 
     // Transitions
     private boolean isSliding = false;
@@ -47,6 +51,7 @@ public class Main extends Application {
 
     private int deathCount = 0;
     private double timer = 0;
+    private static int score = 0;
 
 
     @Override
@@ -72,8 +77,9 @@ public class Main extends Application {
         root.getChildren().addAll(canvas, menuNode, pauseNode);
 
         keys = new HashSet<>();
-        zadeline = new Player(WIDTH/2, HEIGHT/2);
+        zadeline = new Player(10, HEIGHT-20);
         level = new Level();
+        collectibles = new ArrayList<>();
 
         try {
             backgroundImage = new Image(Main.class.getResourceAsStream("images/background-zeleste.png"));
@@ -102,6 +108,7 @@ public class Main extends Application {
 
         currentRoom = 0;
         level.loadRoom(currentRoom);
+
 
         gameLoop.start();
 
@@ -148,6 +155,7 @@ public class Main extends Application {
             else zadeline.getPos().x += dt * SLIDE_SPEED;
 
 
+
             if(slideOffset >= WIDTH) {
                 currentRoom = nextRoomId;
                 level.loadRoom(currentRoom);
@@ -162,13 +170,13 @@ public class Main extends Application {
 
         if(!isSliding) timer+=dt;
 
-        if(zadeline.getPos().x > WIDTH && currentRoom < 1){
+        if(zadeline.getPos().x > WIDTH && currentRoom < level.getTotalRooms()-1){
             isSliding = true;
             nextRoomId = currentRoom + 1;
             slideDirection = 1;
             slideOffset = 0;
         }
-        if(zadeline.getPos().x < -zadeline.getWIDTH() && currentRoom > 0){
+        if(zadeline.getPos().x < -zadeline.getWIDTH() && currentRoom >= currentRoom - level.getTotalRooms()){
             isSliding = true;
             nextRoomId = currentRoom - 1;
             slideDirection = -1;
@@ -360,6 +368,5 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch();
     }
-
 
 }
