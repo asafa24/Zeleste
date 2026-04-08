@@ -12,6 +12,8 @@ public class Player {
     private static final double HEIGHT = 16;
     private Color color;
 
+    private Skin currentSkin;
+
     public boolean isDashing = false;
     public double dashTimer = 0;
     public boolean canDash = true;

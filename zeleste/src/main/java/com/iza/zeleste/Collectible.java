@@ -11,8 +11,10 @@ public abstract class Collectible {
     }
 
     public boolean isTouched(Player p){
-        Main.collectibles.remove(this);
-        return p.getPos().x + p.getWIDTH() <= this.pos.x + this.WIDTH;
+        return this.pos.x < p.getPos().x + p.getWIDTH() &&
+                this.pos.x + WIDTH > p.getPos().x &&
+                this.pos.y < p.getPos().y + p.getWIDTH() &&
+                this.pos.y + WIDTH > p.getPos().y;
     }
 
     public abstract void applyEffect(Player p);
@@ -26,4 +28,5 @@ public abstract class Collectible {
     public static double getWIDTH() {
         return WIDTH;
     }
+
 }

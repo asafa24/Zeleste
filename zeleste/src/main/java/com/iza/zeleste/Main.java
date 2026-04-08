@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 public class Main extends Application {
@@ -30,9 +31,9 @@ public class Main extends Application {
     private Font renogare;
 
     private HashSet<KeyCode> keys;
-    private Player zadeline;
+    public static Player zadeline;
     private Level level;
-    public static List<Collectible> collectibles;
+    public static List<Strawberry> strawberries;
 
     public static final double WIDTH = 800;
     public static final double HEIGHT = 600;
@@ -79,7 +80,7 @@ public class Main extends Application {
         keys = new HashSet<>();
         zadeline = new Player(10, HEIGHT-20);
         level = new Level();
-        collectibles = new ArrayList<>();
+        strawberries = new ArrayList<>();
 
         try {
             backgroundImage = new Image(Main.class.getResourceAsStream("images/background-zeleste.png"));
@@ -107,6 +108,7 @@ public class Main extends Application {
         };
 
         currentRoom = 0;
+        initStrawberries();
         level.loadRoom(currentRoom);
 
 
@@ -151,8 +153,18 @@ public class Main extends Application {
         if(isSliding){
             slideOffset += dt * SLIDE_SPEED;
 
-            if(slideDirection == 1) zadeline.getPos().x -= dt * SLIDE_SPEED;
-            else zadeline.getPos().x += dt * SLIDE_SPEED;
+            if(slideDirection == 1) {
+                zadeline.getPos().x -= dt * SLIDE_SPEED;
+                for(Strawberry s : strawberries){
+                    s.getPos().x -= dt * SLIDE_SPEED;
+                }
+            }
+            else {
+                zadeline.getPos().x += dt * SLIDE_SPEED;
+                for(Strawberry s : strawberries){
+                    s.getPos().x += dt * SLIDE_SPEED;
+                }
+            }
 
 
 
@@ -161,6 +173,8 @@ public class Main extends Application {
                 level.loadRoom(currentRoom);
                 slideOffset = 0;
                 isSliding = false;
+                initStrawberries();
+
 
                 zadeline.getPos().x = (slideDirection == 1) ? 10 : WIDTH - zadeline.getWIDTH() - 10;
                 zadeline.setVel(0, 0);
@@ -327,6 +341,25 @@ public class Main extends Application {
             deathCount++;
         }
 
+//        for (int i = 0; i < collectibles.size(); i++){
+//            Collectible c = collectibles.get(i);
+//            if(c.isTouched(zadeline)) {
+//                c.applyEffect(zadeline);
+//                collectibles.remove(c);
+//                score++;
+//            }
+//        }
+
+        Iterator<Strawberry> it = strawberries.iterator();
+        while(it.hasNext()){
+            Strawberry s = it.next();
+            if(s.isTouched(zadeline)) {
+                it.remove();
+                score++;
+            }
+
+        }
+
         spacePressedLastFrame = keys.contains(KeyCode.SPACE);
     }
 
@@ -347,7 +380,13 @@ public class Main extends Application {
             zadeline.render(gc);
         } else{
             level.draw(gc, currentRoom, 0);
+            for(Strawberry s : strawberries){
+                s.render(gc);
+            }
             zadeline.render(gc);
+        }
+        for(Strawberry s : strawberries){
+            s.render(gc);
         }
 
         gc.setFill(Color.WHITE);
@@ -361,11 +400,30 @@ public class Main extends Application {
         gc.fillText("Temps : " + timeString, WIDTH - 200, 20);
         gc.setStroke(Color.BLACK);
         gc.strokeText("Temps : " + timeString, WIDTH - 200, 20);
+
+        gc.fillText("Score : " + score, WIDTH/2, 23);
+    }
+
+    public void initStrawberries() {
+        strawberries.clear();
+        String[] mapData = level.getAllRooms()[currentRoom];
+
+        for(int y = 0; y < mapData.length; y++){
+            for(int x = 0; x < mapData[y].length(); x++){
+                char tile = mapData[y].charAt(x);
+                if(tile == '7'){
+                    double posX = x*Level.TILE_SIZE;
+                    double posY = y*Level.TILE_SIZE;
+
+                    strawberries.add(new Strawberry(posX, posY));
+                }
+            }
+        }
     }
 
 
 
-    public static void main(String[] args) {
+        public static void main(String[] args) {
         launch();
     }
 
