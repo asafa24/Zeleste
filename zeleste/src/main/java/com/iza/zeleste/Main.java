@@ -14,10 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Main extends Application {
 
@@ -42,6 +39,7 @@ public class Main extends Application {
 
     private int currentRoom;
 
+    private HashMap<PlayerState, Animation> animations = new HashMap<>();
 
     // Transitions
     private boolean isSliding = false;
@@ -83,7 +81,7 @@ public class Main extends Application {
         strawberries = new ArrayList<>();
 
         try {
-            backgroundImage = new Image(Main.class.getResourceAsStream("images/background-zeleste.png"));
+            backgroundImage = new Image(Objects.requireNonNull(Main.class.getResourceAsStream("images/background-zeleste.png")));
             renogare = Font.loadFont(Main.class.getResourceAsStream("fonts/Renogare-Regular.otf"), 24);
             if (renogare == null) renogare = Font.font("Arial", 24);
         } catch (NullPointerException e){

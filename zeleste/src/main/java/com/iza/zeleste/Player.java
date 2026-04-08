@@ -12,7 +12,9 @@ public class Player {
     private static final double HEIGHT = 16;
     private Color color;
 
-    private Skin currentSkin;
+    private PlayerState state = PlayerState.IDLE;
+    private double animTimer = 0;
+    private boolean facingRight = true;
 
     public boolean isDashing = false;
     public double dashTimer = 0;
