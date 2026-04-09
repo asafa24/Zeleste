@@ -454,9 +454,8 @@ public class Main extends Application {
             var stream = Main.class.getResourceAsStream(fullPath);
 
             if (stream == null) {
-                // Si ça plante, on affiche le chemin exact qui pose problème
                 System.err.println("ERREUR : Fichier introuvable -> " + fullPath);
-                continue; // On passe au suivant au lieu de faire crash le jeu
+                continue;
             }
             list.add(new Image(Objects.requireNonNull(Main.class.getResourceAsStream(fullPath)), 32, 32, true, true));
         }

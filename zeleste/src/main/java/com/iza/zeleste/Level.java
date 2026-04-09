@@ -1,6 +1,7 @@
 package com.iza.zeleste;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class Level {
@@ -8,6 +9,7 @@ public class Level {
 
     private int[][] grille;
     private String[][] allRooms;
+    private Image girder;
 
     public Level() {
         this.allRooms = new String[][]{{
@@ -72,6 +74,11 @@ public class Level {
                 "1111111111111111111111111",
         }};
         loadRoom(0);
+        try {
+            this.girder = new Image(Main.class.getResourceAsStream("images/girder-tile.png"));
+        } catch(NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
     public void loadRoom(int id){
@@ -110,8 +117,13 @@ public class Level {
                 char tile = mapData[y].charAt(x);
 
                 if (tile == '1') {
-                    gc.setFill(Color.LIGHTSLATEGRAY);
-                    gc.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
+                    if(girder == null){
+                        gc.setFill(Color.LIGHTSLATEGRAY);
+                        gc.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
+                    } else{
+                        gc.drawImage(girder, drawX, drawY, TILE_SIZE, TILE_SIZE);
+                    }
+
                 }
                 else if (tile == '2') {
                     gc.setFill(Color.RED);
