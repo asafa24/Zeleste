@@ -3,40 +3,34 @@ package com.iza.zeleste;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
+import java.util.List;
+
 public class Animation {
-    private Image spriteSheet;
-    private int frameCount;
-    private int row;
+    private List<Image> frames;
     private double frameDuration = 0.1;
 
-    public Animation(Image spriteSheet, int row, int frameCount){
-        this.spriteSheet = spriteSheet;
-        this.row = row;
-        this.frameCount = frameCount;
+    public Animation(List<Image> frames, double frameDuration){
+        this.frames = frames;
+        this.frameDuration = frameDuration;
     }
 
     public void draw(GraphicsContext gc, double x, double y, double timer, boolean flipped){
-        int frameIndex = (int) (timer/frameDuration) % frameCount;
-        int spriteSize = 32;
+        if(frames.isEmpty()) return;
+        int frameIndex = (int) (timer/frameDuration) % frames.size();
+        Image currentFrame = frames.get(frameIndex);
 
-        double sx = frameIndex * spriteSize;
-        double sy = row * spriteSize;
+        double scale = 1.5;
+        double w = currentFrame.getWidth()*scale;
+        double h = currentFrame.getHeight()*scale;
+
+        double ox = x - (w-Player.getWIDTH())/2;
+        double oy = y + Player.getHEIGHT() - h;
 
         if(flipped){
-            gc.drawImage(spriteSheet, sx, sy, spriteSize, spriteSize, x + spriteSize, y, -spriteSize, spriteSize);
+            gc.drawImage(currentFrame, ox + w, oy, -w, h);
         }else {
-            gc.drawImage(spriteSheet, sx, sy, spriteSize, spriteSize, x, y, spriteSize, spriteSize);
+            gc.drawImage(currentFrame, ox, oy, w, h);
         }
-    }
-
-
-
-
-
-
-
-    public Image getSpriteSheet() {
-        return spriteSheet;
     }
 
 

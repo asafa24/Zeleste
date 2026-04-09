@@ -25,12 +25,15 @@ public class Main extends Application {
 
 
     private Image backgroundImage;
+    private Image zadelineSheet;
     private Font renogare;
 
     private HashSet<KeyCode> keys;
     public static Player zadeline;
     private Level level;
     public static List<Strawberry> strawberries;
+    private List<Image> strawberryFrames;
+    private HashSet<String> collectedIds = new HashSet<>();
 
     public static final double WIDTH = 800;
     public static final double HEIGHT = 600;
@@ -39,7 +42,6 @@ public class Main extends Application {
 
     private int currentRoom;
 
-    private HashMap<PlayerState, Animation> animations = new HashMap<>();
 
     // Transitions
     private boolean isSliding = false;
@@ -83,11 +85,22 @@ public class Main extends Application {
         try {
             backgroundImage = new Image(Objects.requireNonNull(Main.class.getResourceAsStream("images/background-zeleste.png")));
             renogare = Font.loadFont(Main.class.getResourceAsStream("fonts/Renogare-Regular.otf"), 24);
+
             if (renogare == null) renogare = Font.font("Arial", 24);
         } catch (NullPointerException e){
             System.err.println("Error loading");
         }
-        System.out.println("Font : " + renogare.getFamily());
+
+        List<Image> runFrames = loadFrames("run", 8);
+        zadeline.addAnimation(PlayerState.RUN, new Animation(runFrames, 0.1));
+
+        zadeline.addAnimation(PlayerState.IDLE, new Animation(loadFrames("idle", 2), 0.1));
+        zadeline.addAnimation(PlayerState.JUMP, new Animation(loadFrames("jump", 5), 0.1));
+        zadeline.addAnimation(PlayerState.FALL, new Animation(loadFrames("fall", 1), 0.1));
+
+
+        strawberryFrames = loadFrames("strawberry/idle", 30);
+
 
         AnimationTimer gameLoop = new AnimationTimer() {
             private long tempsPrecedent = 0;
@@ -352,11 +365,25 @@ public class Main extends Application {
         while(it.hasNext()){
             Strawberry s = it.next();
             if(s.isTouched(zadeline)) {
+                String id = currentRoom+"_"+(int)s.getPos().x+"_"+(int)s.getPos().y;
+                collectedIds.add(id);
                 it.remove();
                 score++;
             }
 
         }
+
+        zadeline.setAnimTimer(zadeline.getAnimTimer() + dt);
+
+        if(zadeline.isDashing){
+            zadeline.setState(PlayerState.DASH);
+        } else if(!zadeline.onGround){
+            zadeline.setState(zadeline.getVel().y < 0 ? PlayerState.JUMP : PlayerState.FALL);
+        } else {
+            zadeline.setState(zadeline.getVel().x != 0 ? PlayerState.RUN : PlayerState.IDLE);
+        }
+        if(zadeline.getVel().x > 0) zadeline.setFacingRight(true);
+        else if (zadeline.getVel().x < 0) zadeline.setFacingRight(false);
 
         spacePressedLastFrame = keys.contains(KeyCode.SPACE);
     }
@@ -379,25 +406,25 @@ public class Main extends Application {
         } else{
             level.draw(gc, currentRoom, 0);
             for(Strawberry s : strawberries){
-                s.render(gc);
+                s.render(gc, timer);
             }
             zadeline.render(gc);
         }
         for(Strawberry s : strawberries){
-            s.render(gc);
+            s.render(gc, timer);
         }
 
         gc.setFill(Color.WHITE);
         gc.setFont(renogare);
         gc.fillText("Morts : " + deathCount, 20, 20);
         gc.setStroke(Color.BLACK);
-        gc.strokeText("Morts : " + deathCount, 20, 20);
+      //  gc.strokeText("Morts : " + deathCount, 20, 20);
 
         gc.setFill(Color.WHITE);
         String timeString = String.format("%02d:%02d", (int) (timer / 60), (int) (timer % 60));
         gc.fillText("Temps : " + timeString, WIDTH - 200, 20);
         gc.setStroke(Color.BLACK);
-        gc.strokeText("Temps : " + timeString, WIDTH - 200, 20);
+       // gc.strokeText("Temps : " + timeString, WIDTH - 200, 20);
 
         gc.fillText("Score : " + score, WIDTH/2, 23);
     }
@@ -412,12 +439,30 @@ public class Main extends Application {
                 if(tile == '7'){
                     double posX = x*Level.TILE_SIZE;
                     double posY = y*Level.TILE_SIZE;
-
-                    strawberries.add(new Strawberry(posX, posY));
+                    String id = currentRoom + "_" + (int)posX + "_" + (int)posY;
+                    if(!collectedIds.contains(id))  strawberries.add(new Strawberry(strawberryFrames, posX, posY));
                 }
             }
         }
     }
+
+    private List<Image> loadFrames(String path, int count) {
+        List<Image> list = new ArrayList<>();
+        for (int i = 1; i <= count; i++) {
+            // images/"action"/1.png
+            String fullPath = "images/" + path + "/" + i + ".png";
+            var stream = Main.class.getResourceAsStream(fullPath);
+
+            if (stream == null) {
+                // Si ça plante, on affiche le chemin exact qui pose problème
+                System.err.println("ERREUR : Fichier introuvable -> " + fullPath);
+                continue; // On passe au suivant au lieu de faire crash le jeu
+            }
+            list.add(new Image(Objects.requireNonNull(Main.class.getResourceAsStream(fullPath)), 32, 32, true, true));
+        }
+        return list;
+    }
+
 
 
 

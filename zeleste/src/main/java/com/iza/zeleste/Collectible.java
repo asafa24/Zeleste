@@ -19,7 +19,7 @@ public abstract class Collectible {
 
     public abstract void applyEffect(Player p);
 
-    public abstract void render(GraphicsContext gc);
+   // public abstract void render(GraphicsContext gc);
 
     public Vector2D getPos() {
         return pos;

@@ -3,13 +3,15 @@ package com.iza.zeleste;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.HashMap;
+
 
 public class Player {
     private Vector2D pos;
     private Vector2D vel;
 
-    private static final double WIDTH = 16;
-    private static final double HEIGHT = 16;
+    private static final double WIDTH = 18;
+    private static final double HEIGHT = 24;
     private Color color;
 
     private PlayerState state = PlayerState.IDLE;
@@ -24,6 +26,8 @@ public class Player {
     public boolean touchingwallLeft = false;
     public boolean touchingwallRight = false;
 
+    private HashMap<PlayerState, Animation> animations = new HashMap<>();
+
 
 
 
@@ -35,11 +39,15 @@ public class Player {
         this.color = Color.LIGHTSALMON;
     }
 
-    public void render(GraphicsContext gc){
-        if(!canDash) this.color = Color.LIGHTBLUE;
-        else this.color = Color.LIGHTSALMON;
-        gc.setFill(this.color);
-        gc.fillRect(this.pos.x, this.pos.y, WIDTH, HEIGHT);
+    public void render(GraphicsContext gc) {
+        Animation currentAnim = animations.get(state);
+
+        if (currentAnim != null) {
+            currentAnim.draw(gc, pos.x, pos.y, animTimer, !facingRight);
+        } else {
+            gc.setFill(canDash ? Color.LIGHTSALMON : Color.LIGHTBLUE);
+            gc.fillRect(pos.x, pos.y, WIDTH, HEIGHT);
+        }
     }
 
     public void move(double t){
@@ -60,6 +68,10 @@ public class Player {
             this.vel.y = -Math.sqrt(2 * 981 * force);
             onGround = false;
         }
+    }
+
+    public void addAnimation(PlayerState state, Animation anim){
+        animations.put(state, anim);
     }
 
     public void setVel(Vector2D vel) {
@@ -94,5 +106,21 @@ public class Player {
     }
     public static double getHEIGHT() {
         return HEIGHT;
+    }
+
+    public void setAnimTimer(double animTimer) {
+        this.animTimer = animTimer;
+    }
+
+    public double getAnimTimer() {
+        return animTimer;
+    }
+
+    public void setState(PlayerState state) {
+        if(this.state != state) this.state = state;
+    }
+
+    public void setFacingRight(boolean facingRight) {
+        this.facingRight = facingRight;
     }
 }
