@@ -135,9 +135,11 @@ public class Main extends Application {
         scene.setOnKeyPressed(e -> {
             if(e.getCode() == KeyCode.ESCAPE){
                 togglePause();
-            }
+            } else if(e.getCode() == KeyCode.R) zadeline.die();
             keys.add(e.getCode());
         });
+        if (keys.contains(KeyCode.PAGE_UP)) currentRoom++;
+        if (keys.contains(KeyCode.PAGE_DOWN)) currentRoom--;
 
 
         stage.setTitle("Zeleste");
