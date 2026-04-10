@@ -28,6 +28,13 @@ public class Controller {
     }
 
     @FXML
+    private void handleRestart() {
+        mainApp.zadeline.die();
+        mainApp.deathCount++;
+        mainApp.togglePause();
+    }
+
+    @FXML
     public void handleResume() {
         mainApp.togglePause();
     }

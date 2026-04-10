@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox fx:id="pauseMenu" alignment="CENTER" prefHeight="600.0" prefWidth="800.0" spacing="30.0"
-      style="-fx-background-color: rgba(0, 0, 0, 0.7);" xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.iza.zeleste.Controller">
+<VBox fx:id="pauseMenu" alignment="CENTER" prefHeight="600.0" prefWidth="800.0" spacing="30.0" style="-fx-background-color: rgba(0, 0, 0, 0.7);" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.iza.zeleste.Controller">
     <children>
-        <Label text="PAUSE" styleClass="titre-zeleste"/>
-        <Button onAction="#handleResume" prefWidth="250.0" text="REPRENDRE"/>
-        <Button onAction="#handleQuitToMenu" prefWidth="250.0" text="MENU PRINCIPAL"/>
+        <Label styleClass="titre-zeleste" text="PAUSE" />
+        <Button onAction="#handleResume" prefWidth="250.0" text="REPRENDRE" />
+      <Button onAction="#handleRestart" prefWidth="250.0" text="RECOMMENCER" />
+        <Button onAction="#handleQuitToMenu" prefWidth="250.0" text="MENU PRINCIPAL" />
     </children>
 </VBox>

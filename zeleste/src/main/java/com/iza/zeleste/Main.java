@@ -50,7 +50,7 @@ public class Main extends Application {
     private double slideDirection = 0;
     private final double SLIDE_SPEED = 1500;
 
-    private int deathCount = 0;
+    public int deathCount = 0;
     private double timer = 0;
     private static int score = 0;
 
@@ -138,8 +138,14 @@ public class Main extends Application {
             } else if(e.getCode() == KeyCode.R) zadeline.die();
             keys.add(e.getCode());
         });
-        if (keys.contains(KeyCode.PAGE_UP)) currentRoom++;
-        if (keys.contains(KeyCode.PAGE_DOWN)) currentRoom--;
+        if (keys.contains(KeyCode.PAGE_UP)) {
+            slideDirection = -1;
+            isSliding = true;
+        }
+        if (keys.contains(KeyCode.PAGE_DOWN)){
+            slideDirection = 1;
+            isSliding = true;
+        }
 
 
         stage.setTitle("Zeleste");
@@ -417,18 +423,20 @@ public class Main extends Application {
         }
 
         gc.setFill(Color.WHITE);
+        //Couleur principale : Color.rgb(171, 32, 120)
         gc.setFont(renogare);
         gc.fillText("Morts : " + deathCount, 20, 20);
         gc.setStroke(Color.BLACK);
-      //  gc.strokeText("Morts : " + deathCount, 20, 20);
+        gc.setLineWidth(0.5);
+        gc.strokeText("Morts : " + deathCount, 20, 20);
 
-        gc.setFill(Color.WHITE);
         String timeString = String.format("%02d:%02d", (int) (timer / 60), (int) (timer % 60));
         gc.fillText("Temps : " + timeString, WIDTH - 200, 20);
-        gc.setStroke(Color.BLACK);
-       // gc.strokeText("Temps : " + timeString, WIDTH - 200, 20);
+        gc.strokeText("Temps : " + timeString, WIDTH - 200, 20);
 
         gc.fillText("Score : " + score, WIDTH/2, 23);
+        gc.strokeText("Score : " + score, WIDTH/2, 23);
+
     }
 
     public void initStrawberries() {
